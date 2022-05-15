@@ -55,7 +55,7 @@ const snakeProperty = {
 let berry = {
 	x: 32,
 	y: 32,
-	rad: 20
+	rad: 23
 } 
 let cobble = {
 	x: 64,
@@ -88,44 +88,107 @@ requestAnimationFrame( gameLoop );
 function Speed(){
 	switch (score){ 
 		case 1:
-			gameConfig.snakeCell =  4 * speedStep ;
+			
+			
+			
+			gameConfig.snakeCell =  2 * speedStep ;
 			
 			break;
 		case 2:
-			gameConfig.snakeCell =  5 * speedStep ;
+			addCobble();
+			gameConfig.snakeCell =  3 * speedStep ;
 			
 			
 			break;
 		case 5:
-			gameConfig.snakeCell =  6 * speedStep ;
+			addCobble();
+			
+			gameConfig.snakeCell =  5 * speedStep ;
 			break;
 		case 10:
+			
 			gameConfig.snakeCell =  3 * speedStep ;
 			break;
 		case 15:
-			gameConfig.snakeCell =  8 * speedStep ;
+			destroy();
+			
+			
+			gameConfig.snakeCell =  4.5 * speedStep ;
 			break;
 		case 23:
-			gameConfig.snakeCell =  9 * speedStep ;
+			destroy();
+			gameConfig.snakeCell =  4.7 * speedStep ;
 			break;
 		case 40:
-			gameConfig.snakeCell =  10 * speedStep ;
+			destroy();
+			gameConfig.snakeCell =  5.5 * speedStep ;
+			break;
+		case 50:
+			destroy();
+			
 			break;
 		case 70:
-			gameConfig.snakeCell =  11 * speedStep ;
+			destroy();
+			gameConfig.snakeCell =  7 * speedStep ;
 			break;
 		case 100:
-			gameConfig.snakeCell =  15 * speedStep ;
+			destroy();
+			gameConfig.snakeCell =  8 * speedStep ;
 			break;
 		case 150:
-			gameConfig.snakeCell =  18 * speedStep ;
+			
+			destroy();
+			gameConfig.snakeCell =  9 * speedStep ;
 			break;
 		case 210:
-			gameConfig.snakeCell =  19 * speedStep;
+			gameConfig.snakeCell =  13 * speedStep;
+			break;
+		case 215:
+			gameConfig.snakeCell =  1 * speedStep;
+			break;
+
+		case 220:
+			gameConfig.snakeCell =  2 * speedStep;
+			break;
+		case 235:
+			gameConfig.snakeCell =  4 * speedStep;
+			break;
+		case 250:
+			gameConfig.snakeCell =  2 * speedStep;
+			break;
+		case 251:
+			gameConfig.snakeCell =  3 * speedStep;
+			break;
+		case 260:
+			gameConfig.snakeCell =  4 * speedStep;
+			break;
+		case 299:
+			gameConfig.snakeCell =  5 * speedStep;
+			break;
+			
+		case 333:
+			cobble.log("win");
 			break;
 			
 				
 	}
+
+
+}
+function addCobble(){
+	cobble.x = getRandomInt( 0, canvas.width / gameConfig.sizeCell ) * gameConfig.sizeCell;
+	cobble.y = getRandomInt( 0, canvas.height / gameConfig.sizeCell ) * gameConfig.sizeCell;
+	let bx = baseCobbleX.push(cobble.x);
+	let by = baseCobbleY.push(cobble.y);
+	drawCobble();
+
+}
+function destroy(){
+	let rnd = Math.random() * (baseCobbleX.length - 1) + 1;
+	 baseCobbleX.splice(rnd,1);
+	 baseCobbleY.splice(rnd,1);
+	drawCobble();
+	console.log(baseCobbleX);
 
 
 }
@@ -217,7 +280,7 @@ function refreshGame() {
 	// gameConfig.maxStep =  3,
 	score = 0;
 	if (pixels < 1.1 ||( screenWidth > 1800  && screenHeight > 1000) ){
-		speedStep = 0.43;
+		speedStep = 0.33;
 		console.log(screenHeight,screenWidth,pixels)
 		console.log("!понижение скорости змейки на экранах с меньшей плотностью пикселей \n все во имя баланса \n надеюсь работает корректно)");
 	}
@@ -228,7 +291,7 @@ function refreshGame() {
 	snakeProperty.y = 160;
 	snakeProperty.snakeLength = [];
 	snakeProperty.maxLength = 3 * ear;
-	snakeProperty.dx = gameConfig.sizeCell;
+	snakeProperty.dx = 0.1;
 	snakeProperty.dy = 0;
 
 	randomPositionBerry();
@@ -265,7 +328,7 @@ function drawCobble() {
 	context.beginPath();
 	
 	context.fillStyle = "#222523f6";
-	for ( let i =0 ; i < 9; i++){
+	for ( let i =0 ; i < baseCobbleX.length; i++){
 	context.fillRect( baseCobbleX[i], baseCobbleY[i], gameConfig.sizeCell * 2, gameConfig.sizeCell *2 );
 	context.fill();}
 }
@@ -361,3 +424,9 @@ document.addEventListener("keydown", function (e) {
 		}
 	}
 });
+
+
+
+// 
+// 
+//  
