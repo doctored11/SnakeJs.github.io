@@ -4,6 +4,10 @@ let score = 0;
 let ear =5;
 let baseCobbleX = [];
 let baseCobbleY = [];
+const screenWidth = window.screen.width;
+const screenHeight = window.screen.height;
+const pixels = window.devicePixelRatio;
+console.log(screenHeight,screenWidth,pixels)
 
 
 
