@@ -8,6 +8,34 @@ body {
 	
 	
 }
+.block-menu{
+	position: absolute;
+	width: 30%;
+	height: 20%;
+	background-color: #004d0084;
+	z-index: 5;
+	margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  display: flex;
+  justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.snake-head{
+	color: #fff;
+}
+.descr{
+	color: #fff;
+
+}
+.hide{
+	display: none;
+}
+.start{
+	width: 80%;
+	height: 30%;
+}
 
 #game {
 	background: #353336;

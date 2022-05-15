@@ -9,13 +9,35 @@ const screenHeight = window.screen.height;
 const pixels = window.devicePixelRatio;
 console.log(screenHeight,screenWidth,pixels)
 
+const btn =document.querySelector(".start");
+const menu =document.querySelector(".block-menu");
+menu.classList.remove("hide");
+btn.addEventListener("click", function(){
+	startGame();
+})
+function startGame(){
+	menu.classList.add("hide");
+	refreshGame();
+
+}
+function dead(){
+	score = 0;
+	menu.classList.remove("hide");
+	snakeProperty.dx = 0;
+		snakeProperty.dy = 0;
+
+}
+
+
+let speedStep = 1;
+let invulnerability = false;
 
 
 const gameConfig = {
 	step:0,
 	maxStep: 1,
 	sizeCell: 20,
-	snakeCell: 2,
+	snakeCell: 2 * speedStep,
 	sizeBerry:  8,
 	sizeCobble: 10
 
@@ -66,41 +88,42 @@ requestAnimationFrame( gameLoop );
 function Speed(){
 	switch (score){ 
 		case 1:
-			gameConfig.snakeCell =  4;
+			gameConfig.snakeCell =  4 * speedStep ;
 			
 			break;
 		case 2:
-			gameConfig.snakeCell =  5;
+			gameConfig.snakeCell =  5 * speedStep ;
 			
 			
 			break;
 		case 5:
-			gameConfig.snakeCell =  6;
+			gameConfig.snakeCell =  6 * speedStep ;
 			break;
 		case 10:
-			gameConfig.snakeCell =  3;
+			gameConfig.snakeCell =  3 * speedStep ;
 			break;
 		case 15:
-			gameConfig.snakeCell =  8;
+			gameConfig.snakeCell =  8 * speedStep ;
 			break;
 		case 23:
-			gameConfig.snakeCell =  9;
+			gameConfig.snakeCell =  9 * speedStep ;
 			break;
 		case 40:
-			gameConfig.snakeCell =  10;
+			gameConfig.snakeCell =  10 * speedStep ;
 			break;
 		case 70:
-			gameConfig.snakeCell =  11;
+			gameConfig.snakeCell =  11 * speedStep ;
 			break;
 		case 100:
-			gameConfig.snakeCell =  15;
+			gameConfig.snakeCell =  15 * speedStep ;
 			break;
 		case 150:
-			gameConfig.snakeCell =  18;
+			gameConfig.snakeCell =  18 * speedStep ;
 			break;
 		case 210:
-			gameConfig.snakeCell =  19;
+			gameConfig.snakeCell =  19 * speedStep;
 			break;
+			
 				
 	}
 
@@ -148,7 +171,8 @@ function drawsnakeProperty() {
 		}
 		for ( let i =0 ; i < baseCobbleX.length; i++){
 			if ( el.x < baseCobbleX[i] + cobble.rad+15 && el.x > baseCobbleX[i] - (cobble.rad-5)  && el.y < baseCobbleY[i] + cobble.rad+10 && el.y > baseCobbleY[i] - (cobble.rad-5) ) {
-				refreshGame();
+				dead();
+				// startGame();
 			}
 			if ( berry.x < baseCobbleX[i] + cobble.rad+25 && berry.x > baseCobbleX[i] - (cobble.rad+10)  && baseCobbleY[i] < cobble.y + cobble.rad+10 && berry.y > baseCobbleY[i] - (cobble.rad+10) ) {
 				randomPositionBerry();
@@ -161,8 +185,9 @@ function drawsnakeProperty() {
 
 		for( let i = index + 1; i < snakeProperty.snakeLength.length; i++ ) {
 
-			if ( el.x == snakeProperty.snakeLength[i].x && el.y == snakeProperty.snakeLength[i].y ) {
-				refreshGame();
+			if ( el.x == snakeProperty.snakeLength[i].x && el.y == snakeProperty.snakeLength[i].y && invulnerability != true ) {
+				menu.classList.remove("hide");
+				dead();
 				drawBerry();
 			}
 			
@@ -188,14 +213,21 @@ function collisionBorder() {
 function refreshGame() {
 	baseCobbleX = [];
  baseCobbleY = [];
+ 
 	// gameConfig.maxStep =  3,
 	score = 0;
+	if (pixels < 1.1 ||( screenWidth > 1800  && screenHeight > 1000) ){
+		speedStep = 0.43;
+		console.log(screenHeight,screenWidth,pixels)
+		console.log("!понижение скорости змейки на экранах с меньшей плотностью пикселей \n все во имя баланса \n надеюсь работает корректно)");
+	}
+	gameConfig.snakeCell = 1 * speedStep;
 	drawScore();
 
 	snakeProperty.x = 160;
 	snakeProperty.y = 160;
 	snakeProperty.snakeLength = [];
-	snakeProperty.maxLength = 2 * ear +1;
+	snakeProperty.maxLength = 3 * ear;
 	snakeProperty.dx = gameConfig.sizeCell;
 	snakeProperty.dy = 0;
 
@@ -271,18 +303,61 @@ function getRandomInt(min, max) {
 }
 
 document.addEventListener("keydown", function (e) {
-	if ( e.code == "KeyW" ) {
-		snakeProperty.dy = -gameConfig.snakeCell;
+	console.log(snakeProperty.dy,snakeProperty.dx, gameConfig.snakeCell,gameConfig.sizeCell, gameConfig.maxStep,gameConfig.step, gameConfig.snakeCell,speedStep );
+	if ( e.code == "KeyW"  ) { 
+		 if ( snakeProperty.dy !==0 &&  snakeProperty.dy > 0){
+			
+			
+			snakeProperty.dx = -gameConfig.snakeCell ;
+		 snakeProperty.dy =  -gameConfig.snakeCell;
+		 setTimeout(() => { invulnerability = true; snakeProperty.dx = 0; }, 80);
+		 invulnerability = false;
+		 
+		 } else{
+			invulnerability = false;
+			
+			 snakeProperty.dy = -gameConfig.snakeCell;
 		snakeProperty.dx = 0;
+		 }
+		 
+		 
+		
 		
 	} else if ( e.code == "KeyA" ) {
+		if(  snakeProperty.dx !==0 &&  snakeProperty.dx > 0){
+			
+			snakeProperty.dy = gameConfig.snakeCell;
+		 snakeProperty.dx =  -gameConfig.snakeCell;
+		 setTimeout(() => {invulnerability = true; snakeProperty.dy = 0; }, 80);
+		 invulnerability = false;
+		}else{
+			invulnerability = false;
 		snakeProperty.dx = -gameConfig.snakeCell;
 		snakeProperty.dy = 0;
+		}
 	} else if ( e.code == "KeyS" ) {
-		snakeProperty.dy = gameConfig.snakeCell;
+		if ( snakeProperty.dy !==0 &&  snakeProperty.dy < 0){
+			
+			snakeProperty.dx = gameConfig.snakeCell;
+		 snakeProperty.dy =  gameConfig.snakeCell;
+		 setTimeout(() => {invulnerability = true; snakeProperty.dx = 0; }, 80);
+		 invulnerability = false;
+		 } else{
+			invulnerability = false;
+			 snakeProperty.dy = gameConfig.snakeCell;
 		snakeProperty.dx = 0;
+		 }
 	} else if ( e.code == "KeyD" ) {
+		if(  snakeProperty.dx !==0 &&  snakeProperty.dx < 0){
+			
+			snakeProperty.dy = -gameConfig.snakeCell;
+		 snakeProperty.dx =  gameConfig.snakeCell;
+		 setTimeout(() => { invulnerability = true; snakeProperty.dy = 0; }, 80);
+		 invulnerability = false;
+		}else{
+			invulnerability = false;
 		snakeProperty.dx = gameConfig.snakeCell;
 		snakeProperty.dy = 0;
+		}
 	}
 });
