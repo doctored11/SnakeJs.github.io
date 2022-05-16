@@ -82,6 +82,9 @@ function gameLoop() {
 	drawBerry();
 	drawCobble();
 	drawsnakeProperty();
+	
+	// botDinner();
+	botSnake();
 }
 requestAnimationFrame( gameLoop );
 
@@ -272,10 +275,24 @@ function collisionBorder() {
 	} else if ( snakeProperty.y >= canvas.height ) {
 		snakeProperty.y = 0;
 	}
+	
+	// 
+	if (botProperty.x < 0) {
+		botProperty.x = canvas.width - gameConfig.sizeCell;
+	} else if ( botProperty.x >= canvas.width ) {
+		botProperty.x = 0;
+	}
+
+	if (botProperty.y < 0) {
+		botProperty.y = canvas.height - gameConfig.sizeCell;
+	} else if ( botProperty.y >= canvas.height ) {
+		botProperty.y = 0;
+	}
 }
 function refreshGame() {
 	baseCobbleX = [];
  baseCobbleY = [];
+ 
  
 	// gameConfig.maxStep =  3,
 	score = 0;
@@ -292,10 +309,18 @@ function refreshGame() {
 	snakeProperty.snakeLength = [];
 	snakeProperty.maxLength = 3 * ear;
 	snakeProperty.dx = 0.1;
-	snakeProperty.dy = 0;
+	botProperty.dx = 1;
+	botProperty.x = 160;
+	botProperty.y = 160;
+	botProperty.snakeLength = [];
+	botProperty.maxLength = 4 * ear;
+	botProperty.dx = 0.1;
 
+	botProperty.dy = 0;
+	
+randomPositionCobble();
 	randomPositionBerry();
-	randomPositionCobble();
+	
 }
 let blue = 0;
 let yellow = 0;
@@ -427,6 +452,162 @@ document.addEventListener("keydown", function (e) {
 
 
 
+
+
+
+
+// 
+
+
+
+
+
+// 
+
 // 
 // 
 //  
+const botProperty = {
+	x: 0,
+	y: 0,
+	dx: 1,
+	dy: 0,
+	snakeLength: [],
+	maxLength: 4 * ear
+}
+
+function botSnake() {
+	botProperty.x += botProperty.dx;
+	botProperty.y += botProperty.dy;
+
+	collisionBorder();
+
+	
+	botProperty.snakeLength.unshift( { x: botProperty.x, y: botProperty.y } );
+
+	if ( botProperty.snakeLength.length > botProperty.maxLength ) {
+		botProperty.snakeLength.pop();
+	}
+
+	botProperty.snakeLength.forEach( function(el, index){
+		// let ear =5;
+		// let rad = 20;
+		if (index < ear -2 ) {
+			context.fillStyle = "#fff";
+
+		} else if(index == botProperty.snakeLength.length-1){
+			context.fillStyle = "#fff";
+			
+			
+
+		}
+		else {
+			context.fillStyle = "#000";
+
+		}
+		context.fillRect( el.x, el.y, gameConfig.sizeCell, gameConfig.sizeCell );
+
+		if ( el.x < berry.x + berry.rad && el.x > berry.x - berry.rad  && el.y < berry.y + berry.rad && el.y > berry.y - berry.rad ) {
+			botProperty.maxLength+=ear;
+			// incScore();
+			randomPositionBerry();
+			// Speed();
+			
+			
+		}
+		for ( let i =0 ; i < baseCobbleX.length; i++){
+			let botrad = 45;
+
+			
+			
+			
+			
+			
+
+			if ( el.x < baseCobbleX[i] + cobble.rad+15 && el.x > baseCobbleX[i] - (cobble.rad-5)  && el.y < baseCobbleY[i] + cobble.rad+10 && el.y > baseCobbleY[i] - (cobble.rad-5) ) {
+				// dead();
+				context.fillStyle = "#787333";
+
+				
+				botProperty.dy = 0;
+				botProperty.dx = 0;
+				
+
+
+				
+				context.fillRect( el.x, el.y, gameConfig.sizeCell, gameConfig.sizeCell );
+				// startGame();
+			} else {botDinner();}
+			if ( berry.x < baseCobbleX[i] + cobble.rad+25 && berry.x > baseCobbleX[i] - (cobble.rad+10)  && baseCobbleY[i] < cobble.y + cobble.rad+10 && berry.y > baseCobbleY[i] - (cobble.rad+10) ) {
+				randomPositionBerry();
+				
+			}
+		}
+		
+
+		
+
+		for( let i = index + 1; i < botProperty.snakeLength.length; i++ ) {
+
+			if ( el.x == botProperty.snakeLength[i].x && el.y == botProperty.snakeLength[i].y && invulnerability != true ) {
+				// menu.classList.remove("hide");
+				// dead();
+
+				drawBerry();
+			}
+			
+		}
+		
+		
+		
+
+
+	} );
+}
+
+let botrad =50;
+function botDinner(){
+	console.log("bot");
+	console.log(botProperty.x,botProperty.y,berry.x,berry.y);
+	console.log("///");
+	
+
+ 
+
+	
+	berryBotSearch();
+	
+	
+		
+		
+
+	
+
+}
+
+
+function berryBotSearch(){
+	let botrad = 45;
+
+
+	
+
+	if ( botProperty.x < berry.x){
+		botProperty.dx = gameConfig.snakeCell;
+		botProperty.dy = 0;
+	} 
+	if ( botProperty.x > berry.x){
+		botProperty.dx = -gameConfig.snakeCell;
+		botProperty.dy = 0;
+	} 
+	if ( botProperty.y < berry.y){
+		botProperty.dy = gameConfig.snakeCell;
+		botProperty.dx = 0;
+	} 
+	if ( botProperty.y > berry.y){
+		botProperty.dy = -gameConfig.snakeCell;
+		botProperty.dx = 0;
+	}  
+	return;
+
+}
