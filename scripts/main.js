@@ -81,10 +81,11 @@ function gameLoop() {
 
 	drawBerry();
 	drawCobble();
+	botSnake();
 	drawsnakeProperty();
 	
 	// botDinner();
-	botSnake();
+	
 }
 requestAnimationFrame( gameLoop );
 
@@ -477,8 +478,7 @@ const botProperty = {
 }
 
 function botSnake() {
-	botProperty.x += botProperty.dx;
-	botProperty.y += botProperty.dy;
+	
 
 	collisionBorder();
 
@@ -516,26 +516,20 @@ function botSnake() {
 			
 		}
 		for ( let i =0 ; i < baseCobbleX.length; i++){
-			let botrad = 45;
+			let botrad = 5;
 
-			
-			
-			
-			
 			
 
 			if ( el.x < baseCobbleX[i] + cobble.rad+15 && el.x > baseCobbleX[i] - (cobble.rad-5)  && el.y < baseCobbleY[i] + cobble.rad+10 && el.y > baseCobbleY[i] - (cobble.rad-5) ) {
 				// dead();
 				context.fillStyle = "#787333";
 
-				
-				botProperty.dy = 0;
-				botProperty.dx = 0;
-				
-
-
-				
 				context.fillRect( el.x, el.y, gameConfig.sizeCell, gameConfig.sizeCell );
+				 botProperty.dx = 0; botProperty.dy = 0;
+				
+				return;
+			
+				
 				// startGame();
 			} else {botDinner();}
 			if ( berry.x < baseCobbleX[i] + cobble.rad+25 && berry.x > baseCobbleX[i] - (cobble.rad+10)  && baseCobbleY[i] < cobble.y + cobble.rad+10 && berry.y > baseCobbleY[i] - (cobble.rad+10) ) {
@@ -553,7 +547,7 @@ function botSnake() {
 				// menu.classList.remove("hide");
 				// dead();
 
-				drawBerry();
+				// drawBerry();
 			}
 			
 		}
@@ -563,6 +557,9 @@ function botSnake() {
 
 
 	} );
+	
+	botProperty.x += botProperty.dx;
+	botProperty.y += botProperty.dy;
 }
 
 let botrad =50;
@@ -608,6 +605,6 @@ function berryBotSearch(){
 		botProperty.dy = -gameConfig.snakeCell;
 		botProperty.dx = 0;
 	}  
-	return;
+	
 
 }
