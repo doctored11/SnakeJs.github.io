@@ -4,6 +4,7 @@ let score = 0;
 let ear =5;
 let baseCobbleX = [];
 let baseCobbleY = [];
+let random;
 const screenWidth = window.screen.width;
 const screenHeight = window.screen.height;
 const pixels = window.devicePixelRatio;
@@ -38,6 +39,7 @@ const gameConfig = {
 	maxStep: 1,
 	sizeCell: 20,
 	snakeCell: 2 * speedStep,
+	botCell: 1.5 * speedStep,
 	sizeBerry:  8,
 	sizeCobble: 10
 
@@ -46,7 +48,7 @@ const gameConfig = {
 const snakeProperty = {
 	x: 160,
 	y: 160,
-	dx: gameConfig.snakeCell,
+	dx: 0.1,
 	dy: 0,
 	snakeLength: [],
 	maxLength: 3 * ear
@@ -80,14 +82,17 @@ function gameLoop() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
 	drawBerry();
-	drawCobble();
-	botSnake();
+	if ( random == false) {drawCobble();} else{botSnake();
+		drawCobble();}
+	
+	
 	drawsnakeProperty();
 	
 	// botDinner();
 	
 }
 requestAnimationFrame( gameLoop );
+
 
 function Speed(){
 	switch (score){ 
@@ -180,11 +185,13 @@ function Speed(){
 
 }
 function addCobble(){
+	if ( random == false){
 	cobble.x = getRandomInt( 0, canvas.width / gameConfig.sizeCell ) * gameConfig.sizeCell;
 	cobble.y = getRandomInt( 0, canvas.height / gameConfig.sizeCell ) * gameConfig.sizeCell;
 	let bx = baseCobbleX.push(cobble.x);
 	let by = baseCobbleY.push(cobble.y);
 	drawCobble();
+	}
 
 }
 function destroy(){
@@ -246,6 +253,37 @@ function drawsnakeProperty() {
 				
 			}
 		}
+
+
+		botProperty.snakeLength.forEach( function(elb, indexb){
+			
+			for( let l = index + 1; l < botProperty.snakeLength.length; l++ ) {
+				if (index < ear -2 ) {
+				
+				// if (   elb.x >  el.x- 10 && elb.x <  el.x+10 && elb.y < el.y + 10 && elb.y > el.y - 10){
+				// 	dead();
+				// } snakeProperty.snakeLength[l].x
+				 if (   el.x >  elb.x- 10 && el.x <  elb.x+10 && el.y < elb.y + 10 && el.y > elb.y - 10){
+					 dead();
+				 }
+				}
+
+
+
+			}
+			
+			
+		})
+
+		if ( botProperty.x >  berry.x  - 9 &&  botProperty.x < berry.x  + 9){
+			botProperty.x = berry.x
+			botProperty.dy = 0;
+
+			
+		} else if (  botProperty.y >  berry.y  - 9 &&  botProperty.y < berry.y  + 9 ){
+			botProperty.y = berry.y
+			botProperty.dx = 0;
+		}
 		
 
 		
@@ -258,8 +296,12 @@ function drawsnakeProperty() {
 				drawBerry();
 			}
 			
+	
+			
+			
 
 		}
+		
 
 	} );
 }
@@ -293,6 +335,13 @@ function collisionBorder() {
 function refreshGame() {
 	baseCobbleX = [];
  baseCobbleY = [];
+ if ( Math.random()>0.97) {
+	random = true;
+
+} else{
+	random = false;
+	randomPositionCobble();
+}
  
  
 	// gameConfig.maxStep =  3,
@@ -305,21 +354,23 @@ function refreshGame() {
 	gameConfig.snakeCell = 1 * speedStep;
 	drawScore();
 
-	snakeProperty.x = 160;
-	snakeProperty.y = 160;
+	snakeProperty.x = 60;
+	snakeProperty.y = 60;
+	gameConfig.snakeCell = 1;
+	gameConfig.botCell = 0.9;
 	snakeProperty.snakeLength = [];
 	snakeProperty.maxLength = 3 * ear;
 	snakeProperty.dx = 0.1;
 	botProperty.dx = 1;
-	botProperty.x = 160;
-	botProperty.y = 160;
+	botProperty.x = 360;
+	botProperty.y = 360;
 	botProperty.snakeLength = [];
 	botProperty.maxLength = 4 * ear;
 	botProperty.dx = 0.1;
 
 	botProperty.dy = 0;
 	
-randomPositionCobble();
+
 	randomPositionBerry();
 	
 }
@@ -332,13 +383,13 @@ function drawBerry() {
 	context.arc( berry.x + (gameConfig.sizeCell / 2 ), berry.y + (gameConfig.sizeCell / 2 ), gameConfig.sizeBerry , 0, 2 * Math.PI );
 	context.fill();}
 	
-	if (score/10 == 1 &&  Math.random()<=0.35){
+	if (score/10 == 1 &&  Math.random() < 0.35){
 		context.fillStyle = "#010c71";
 		context.arc( berry.x + (gameConfig.sizeCell /2 ), berry.y + (gameConfig.sizeCell/2  ), gameConfig.sizeBerry , 0, 2 * Math.PI );
 		context.fill();
 		blue = 1;
 	}
-	if (score/15 == 1 && Math.random() <= 0.2){
+	if (score/15 == 1 && Math.random() < 0.2){
 		context.fillStyle = "#adb60e";
 		context.arc( berry.x + (gameConfig.sizeCell / 2 ), berry.y + (gameConfig.sizeCell / 2 ), gameConfig.sizeBerry , 0, 2 * Math.PI );
 		context.fill();
@@ -365,7 +416,7 @@ function randomPositionCobble() {
 	let bx = baseCobbleX.push(cobble.x);
 	let by = baseCobbleY.push(cobble.y)
 	}
-	console.log(baseCobbleX,baseCobbleY);
+	// console.log(baseCobbleX,baseCobbleY);
 	
 }
 
@@ -392,8 +443,9 @@ function getRandomInt(min, max) {
 }
 
 document.addEventListener("keydown", function (e) {
-	console.log(snakeProperty.dy,snakeProperty.dx, gameConfig.snakeCell,gameConfig.sizeCell, gameConfig.maxStep,gameConfig.step, gameConfig.snakeCell,speedStep );
+	// console.log(snakeProperty.dy,snakeProperty.dx, gameConfig.snakeCell,gameConfig.sizeCell, gameConfig.maxStep,gameConfig.step, gameConfig.snakeCell,speedStep );
 	if ( e.code == "KeyW"  ) { 
+		// console.log (  el.x , elb.x, el.y , elb.y + "!" );
 		 if ( snakeProperty.dy !==0 &&  snakeProperty.dy > 0){
 			
 			
@@ -509,34 +561,30 @@ function botSnake() {
 
 		if ( el.x < berry.x + berry.rad && el.x > berry.x - berry.rad  && el.y < berry.y + berry.rad && el.y > berry.y - berry.rad ) {
 			botProperty.maxLength+=ear;
+			
+			if ( gameConfig.botCell > 5){
+				gameConfig.botCell+= 0.2;
+
+			} else if  ( gameConfig.botCell > 7){
+				gameConfig.botCell+= 0.1;
+
+			} else if  ( gameConfig.botCell > 12){
+				gameConfig.botCell = 6;
+
+			} else {
+				gameConfig.botCell+= 0.4;
+
+			}
 			// incScore();
 			randomPositionBerry();
 			// Speed();
 			
 			
 		}
-		for ( let i =0 ; i < baseCobbleX.length; i++){
-			let botrad = 5;
 
+			botDinner();	
 			
-
-			if ( el.x < baseCobbleX[i] + cobble.rad+15 && el.x > baseCobbleX[i] - (cobble.rad-5)  && el.y < baseCobbleY[i] + cobble.rad+10 && el.y > baseCobbleY[i] - (cobble.rad-5) ) {
-				// dead();
-				context.fillStyle = "#787333";
-
-				context.fillRect( el.x, el.y, gameConfig.sizeCell, gameConfig.sizeCell );
-				 botProperty.dx = 0; botProperty.dy = 0;
-				
-				return;
-			
-				
-				// startGame();
-			} else {botDinner();}
-			if ( berry.x < baseCobbleX[i] + cobble.rad+25 && berry.x > baseCobbleX[i] - (cobble.rad+10)  && baseCobbleY[i] < cobble.y + cobble.rad+10 && berry.y > baseCobbleY[i] - (cobble.rad+10) ) {
-				randomPositionBerry();
-				
-			}
-		}
+		
 		
 
 		
@@ -564,9 +612,9 @@ function botSnake() {
 
 let botrad =50;
 function botDinner(){
-	console.log("bot");
-	console.log(botProperty.x,botProperty.y,berry.x,berry.y);
-	console.log("///");
+	// console.log("bot");
+	// console.log(botProperty.x,botProperty.y,berry.x,berry.y);
+	// console.log("///");
 	
 
  
@@ -590,19 +638,19 @@ function berryBotSearch(){
 	
 
 	if ( botProperty.x < berry.x){
-		botProperty.dx = gameConfig.snakeCell;
+		botProperty.dx = gameConfig.botCell;
 		botProperty.dy = 0;
 	} 
 	if ( botProperty.x > berry.x){
-		botProperty.dx = -gameConfig.snakeCell;
+		botProperty.dx = -gameConfig.botCell;
 		botProperty.dy = 0;
 	} 
 	if ( botProperty.y < berry.y){
-		botProperty.dy = gameConfig.snakeCell;
+		botProperty.dy = gameConfig.botCell;
 		botProperty.dx = 0;
 	} 
 	if ( botProperty.y > berry.y){
-		botProperty.dy = -gameConfig.snakeCell;
+		botProperty.dy = -gameConfig.botCell;
 		botProperty.dx = 0;
 	}  
 	
