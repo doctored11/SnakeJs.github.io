@@ -4,6 +4,11 @@ let score = 0;
 let ear =5;
 let baseCobbleX = [];
 let baseCobbleY = [];
+let rndArrow;
+let deadBot = false;
+let priorityX = false;
+let priorityY = false;
+
 const screenWidth = window.screen.width;
 const screenHeight = window.screen.height;
 const pixels = window.devicePixelRatio;
@@ -30,6 +35,7 @@ function dead(){
 
 
 let speedStep = 1;
+let botStep = 1;
 let invulnerability = false;
 
 
@@ -38,6 +44,7 @@ const gameConfig = {
 	maxStep: 1,
 	sizeCell: 20,
 	snakeCell: 2 * speedStep,
+	botCell: 2 * botStep,
 	sizeBerry:  8,
 	sizeCobble: 10
 
@@ -78,7 +85,7 @@ function gameLoop() {
 	gameConfig.step = 0;
 
 	context.clearRect(0, 0, canvas.width, canvas.height);
-
+	bigBraintime();
 	drawBerry();
 	drawCobble();
 	botSnake();
@@ -291,6 +298,7 @@ function collisionBorder() {
 	}
 }
 function refreshGame() {
+	
 	baseCobbleX = [];
  baseCobbleY = [];
  
@@ -304,15 +312,17 @@ function refreshGame() {
 	}
 	gameConfig.snakeCell = 1 * speedStep;
 	drawScore();
+	deadBot = false;
 
 	snakeProperty.x = 160;
 	snakeProperty.y = 160;
 	snakeProperty.snakeLength = [];
 	snakeProperty.maxLength = 3 * ear;
 	snakeProperty.dx = 0.1;
-	botProperty.dx = 1;
-	botProperty.x = 160;
-	botProperty.y = 160;
+	gameConfig.botCell = 1 * botStep;
+	
+	botProperty.x = 260;
+	botProperty.y = 260;
 	botProperty.snakeLength = [];
 	botProperty.maxLength = 4 * ear;
 	botProperty.dx = 0.1;
@@ -363,7 +373,7 @@ function randomPositionCobble() {
 	cobble.x = getRandomInt( 0, canvas.width / gameConfig.sizeCell ) * gameConfig.sizeCell;
 	cobble.y = getRandomInt( 0, canvas.height / gameConfig.sizeCell ) * gameConfig.sizeCell;
 	let bx = baseCobbleX.push(cobble.x);
-	let by = baseCobbleY.push(cobble.y)
+	let by = baseCobbleY.push(cobble.y);
 	}
 	console.log(baseCobbleX,baseCobbleY);
 	
@@ -392,7 +402,7 @@ function getRandomInt(min, max) {
 }
 
 document.addEventListener("keydown", function (e) {
-	console.log(snakeProperty.dy,snakeProperty.dx, gameConfig.snakeCell,gameConfig.sizeCell, gameConfig.maxStep,gameConfig.step, gameConfig.snakeCell,speedStep );
+	if (e.code != "KeyW"){ console.log( berry.x, botProperty.x, berry.y, botProperty.y );}
 	if ( e.code == "KeyW"  ) { 
 		 if ( snakeProperty.dy !==0 &&  snakeProperty.dy > 0){
 			
@@ -469,12 +479,13 @@ document.addEventListener("keydown", function (e) {
 // 
 //  
 const botProperty = {
-	x: 0,
-	y: 0,
+	x: 20,
+	y: 20,
 	dx: 1,
 	dy: 0,
 	snakeLength: [],
-	maxLength: 4 * ear
+	maxLength: 4 * ear,
+   brainDistance: 15,
 }
 
 function botSnake() {
@@ -490,8 +501,7 @@ function botSnake() {
 	}
 
 	botProperty.snakeLength.forEach( function(el, index){
-		// let ear =5;
-		// let rad = 20;
+		
 		if (index < ear -2 ) {
 			context.fillStyle = "#fff";
 
@@ -507,36 +517,86 @@ function botSnake() {
 		}
 		context.fillRect( el.x, el.y, gameConfig.sizeCell, gameConfig.sizeCell );
 
-		if ( el.x < berry.x + berry.rad && el.x > berry.x - berry.rad  && el.y < berry.y + berry.rad && el.y > berry.y - berry.rad ) {
+		if ( el.x < berry.x + 1.45 *berry.rad && el.x > berry.x -  1.45 * berry.rad  && el.y < berry.y + 1.45 * berry.rad && el.y > berry.y - 1.45 * berry.rad ) {
 			botProperty.maxLength+=ear;
-			// incScore();
+			
 			randomPositionBerry();
-			// Speed();
+			
 			
 			
 		}
 		for ( let i =0 ; i < baseCobbleX.length; i++){
-			let botrad = 5;
-
 			
-
-			if ( el.x < baseCobbleX[i] + cobble.rad+15 && el.x > baseCobbleX[i] - (cobble.rad-5)  && el.y < baseCobbleY[i] + cobble.rad+10 && el.y > baseCobbleY[i] - (cobble.rad-5) ) {
-				// dead();
-				context.fillStyle = "#787333";
-
-				context.fillRect( el.x, el.y, gameConfig.sizeCell, gameConfig.sizeCell );
-				 botProperty.dx = 0; botProperty.dy = 0;
+	
+			
+			if ( el.x < baseCobbleX[i] + cobble.rad && el.x > baseCobbleX[i] - (cobble.rad)  && el.y < baseCobbleY[i] + cobble.rad && el.y > baseCobbleY[i] - (cobble.rad) && deadBot == false ) {
+				 botDead();
+				
 				
 				return;
 			
 				
 				// startGame();
-			} else {botDinner();}
+			} else
+			if (   el.x < baseCobbleX[i] + cobble.rad+( 1.8 * botProperty.brainDistance) && el.x > baseCobbleX[i] - (cobble.rad+( 1.8 * botProperty.brainDistance))  &&  deadBot == false&& el.y < baseCobbleY[i] + cobble.rad+( 1.8 * botProperty.brainDistance) && el.y > baseCobbleY[i] - (cobble.rad+( 1.8 * botProperty.brainDistance)) ) {
+				// dead();
+				context.fillStyle = "#4B0082";
+				context.fillRect( el.x, el.y, gameConfig.sizeCell, gameConfig.sizeCell );
+
+				
+				if (   (botProperty.dx !=0 )  && el.x < baseCobbleX[i] + cobble.rad+( 1.8 * botProperty.brainDistance) && el.x > baseCobbleX[i] - (cobble.rad + botProperty.brainDistance )  && el.y < baseCobbleY[i] + cobble.rad + botProperty.brainDistance  && el.y > baseCobbleY[i] - (cobble.rad + botProperty.brainDistance + botProperty.brainDistance ) ) {
+					botProperty.dx = -2;
+					context.fillStyle = "#FF0000"; // красный право
+					 botProperty.dy =    botProperty.brainDistance/gameConfig.sizeCobble  ;
+					botProperty.dy = Math.round(botProperty.dy)
+					botProperty.dx = 0;
+				}
+				if (  (botProperty.dx !=0  ) &&  el.x < baseCobbleX[i] + cobble.rad+(  botProperty.brainDistance) && el.x > baseCobbleX[i] - (cobble.rad+( 1.8 * botProperty.brainDistance))  && el.y < baseCobbleY[i] + cobble.rad+ botProperty.brainDistance + botProperty.brainDistance   && el.y > baseCobbleY[i] - ( cobble.rad + botProperty.brainDistance  ) ) {
+						context.fillStyle = "#0000FF"; // синий лево
+						
+						
+						 
+						
+						botProperty.dy =  botProperty.brainDistance/gameConfig.sizeCobble ;
+						botProperty.dy = Math.round(botProperty.dy)
+						
+						botProperty.dx = 0;
+					}
+				if ( (botProperty.dy !=0 ) &&  el.x < baseCobbleX[i] + cobble.rad  && el.x > baseCobbleX[i] - (cobble.rad)  && el.y < baseCobbleY[i] + cobble.rad+( 1.8 * botProperty.brainDistance) && el.y > baseCobbleY[i] - (cobble.rad+botProperty.brainDistance) ) {
+						context.fillStyle = "#008000"; // зеленый низ
+						
+						botProperty.dx =  botProperty.brainDistance/gameConfig.sizeCobble  ; 
+						botProperty.dx = Math.round(botProperty.dx)
+						
+						botProperty.dy = 0;
+						
+				}
+				if ( (botProperty.dy !=0  ) &&  el.x < baseCobbleX[i] + cobble.rad && el.x > baseCobbleX[i] - (cobble.rad)  && el.y < baseCobbleY[i] + cobble.rad && el.y > baseCobbleY[i] - (cobble.rad+( 1.8* botProperty.brainDistance)) ) {
+						context.fillStyle = "#FFFF00"; // желтый вверх
+						botProperty.dy = 0;
+						
+						botProperty.dx =  botProperty.brainDistance/gameConfig.sizeCobble  ;
+						botProperty.dx = Math.round(botProperty.dx)
+						
+					}
+						
+				
+				context.fillRect( el.x, el.y, gameConfig.sizeCell, gameConfig.sizeCell );
+				return;
+				
+				// startGame();
+			} else
+			
+			
+			botDinner();
+			
 			if ( berry.x < baseCobbleX[i] + cobble.rad+25 && berry.x > baseCobbleX[i] - (cobble.rad+10)  && baseCobbleY[i] < cobble.y + cobble.rad+10 && berry.y > baseCobbleY[i] - (cobble.rad+10) ) {
 				randomPositionBerry();
+				drawBerry();
 				
 			}
 		}
+	
 		
 
 		
@@ -548,9 +608,9 @@ function botSnake() {
 				// dead();
 
 				// drawBerry();
-			}
+			}}
 			
-		}
+		
 		
 		
 		
@@ -558,53 +618,104 @@ function botSnake() {
 
 	} );
 	
-	botProperty.x += botProperty.dx;
-	botProperty.y += botProperty.dy;
+	botProperty.x += Math.round(botProperty.dx);
+	botProperty.y += Math.round(botProperty.dy); 
 }
+
 
 let botrad =50;
 function botDinner(){
-	console.log("bot");
-	console.log(botProperty.x,botProperty.y,berry.x,berry.y);
-	console.log("///");
+	// console.log("bot");
+	// console.log(botProperty.x,botProperty.y,berry.x,berry.y);
+	// console.log("///");
 	
-
- 
-
 	
 	berryBotSearch();
 	
+
+}
+let dInfo;
+
+function berryBotSearch(){
+
 	
+
+
+  botProperty.x = Math.round(botProperty.x);
+  botProperty.y = Math.round(botProperty.y);
+
+
+  if (  botProperty.x == berry.x || (( botProperty.x >= (berry.x - botProperty.brainDistance/2)) && (botProperty.x < (berry.x + botProperty.brainDistance/2)) )   ){
+	if( botProperty.y < berry.y){
+		botProperty.dx = 0;
+		botProperty.dy = 1 + Math.round(gameConfig.botCell);
 		
+	  } else {
+		botProperty.dy = 0;
+		botProperty.dx = 1 + Math.round(gameConfig.botCell);
 		
 
+	  }
+	
+	
+	
+	return;
+
+
+} else{
+	
+  
+	if ( deadBot == false){
+		if (  Math.round(botProperty.y) > berry.y - Math.round(gameConfig.botCell)      ){
+			botProperty.dy = Math.round(-gameConfig.botCell);
+			botProperty.dx = 0;
+			
+		}
+
+	if (  Math.round(botProperty.x) < berry.x + Math.round(gameConfig.botCell)   ){
+		botProperty.dx = Math.round(gameConfig.botCell);
+		botProperty.dy = 0
+		
+	} 
+	if (   Math.round(botProperty.y) < berry.y + Math.round(gameConfig.botCell)   ){
+		botProperty.dy = Math.round(gameConfig.botCell);
+		botProperty.dx = 0;
+		
+	} 
+	if ( Math.round( botProperty.x) > berry.x - Math.round(gameConfig.botCell)  ){
+		botProperty.dx = Math.round(-gameConfig.botCell);
+		botProperty.dy = 0;
+		
+	} 
+	
+	if (  botProperty.y == berry.y  ){
+		if( botProperty.x < berry.x ){ 
+			botProperty.dx = gameConfig.botCell;
+			
+		} 
+		else
+		{ 
+				 botProperty.dx = -gameConfig.botCell;
+				
+		}
+	} 
+	return;
+
+	
+ }
+}
 	
 
 }
 
-
-function berryBotSearch(){
-	let botrad = 45;
-
-
+function botDead(){
 	
+			console.log("Аркадий мертв(")
+				 botProperty.dx = 0; botProperty.dy = 0;
+				 deadBot = true;
+			return;
 
-	if ( botProperty.x < berry.x){
-		botProperty.dx = gameConfig.snakeCell;
-		botProperty.dy = 0;
-	} 
-	if ( botProperty.x > berry.x){
-		botProperty.dx = -gameConfig.snakeCell;
-		botProperty.dy = 0;
-	} 
-	if ( botProperty.y < berry.y){
-		botProperty.dy = gameConfig.snakeCell;
-		botProperty.dx = 0;
-	} 
-	if ( botProperty.y > berry.y){
-		botProperty.dy = -gameConfig.snakeCell;
-		botProperty.dx = 0;
-	}  
+}
+function bigBraintime(){ 
 	
-
 }
