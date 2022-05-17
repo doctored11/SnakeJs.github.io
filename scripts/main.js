@@ -347,7 +347,7 @@ function refreshGame() {
 	// gameConfig.maxStep =  3,
 	score = 0;
 	if (pixels < 1.1 ||( screenWidth > 1800  && screenHeight > 1000) ){
-		speedStep = 0.33;
+		speedStep = 0.13;
 		console.log(screenHeight,screenWidth,pixels)
 		console.log("!понижение скорости змейки на экранах с меньшей плотностью пикселей \n все во имя баланса \n надеюсь работает корректно)");
 	}
