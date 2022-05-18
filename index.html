@@ -15,16 +15,26 @@
 	</div>
 
 	<div id="game">
-		<div class="game-header">
-			<div class="game-score">
-				<span class="score-count">Snake</span>
+		<div class="counters ">
+		<div class="game-header player-red live">
+			<div class="game-score game-score1">
+				<span class="score-count count1">Snake</span>
+				<p class="dead-inf">dead</p>
 			</div>
 		</div>
+		<div class="game-header  player-blue live">
+			<div class="game-score game-score2 ">
+				<span class="score-count count2">Snake</span>
+				<p class="dead-inf">dead</p>
+			</div>
+		</div>
+	</div>
 		<div class="canvas-wrapper">
 			<canvas id="game-canvas" width="640" height="640"></canvas>
 		</div>
 	</div>
-
+<div>
 	<script src="scripts/main.js"></script>
+</div>
 </body>
 </html>

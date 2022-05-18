@@ -61,6 +61,7 @@ body {
 	justify-content: space-between;
 }
 .game-score {
+	position: relative;
 	padding: 10px 15px;
 	min-width: 160px;
 	height: 50px;
@@ -73,8 +74,54 @@ body {
 }
 .score-count{
 	font-size: 3vmin;
-	color: #c81450;
+	
 	font-weight: bold;
+}
+.count1{
+	color: #c81450;
+}
+.active-second-player .game-score{
+	margin-right: 10px;
+}
+.game-score2,
+ .count2{
+	display: none;
+}
+.active-second-player .game-score2{
+	display: flex;
+}
+.active-second-player .count2{
+	display: inline-block;
+	color: #1464c5;
+}
+.active-second-player{
+	display: flex;
+	width: 30%;
+    justify-content: space-evenly;
+}
+
+.live .dead-inf{
+	display: none;
+}
+.dead-inf{
+	position: absolute;
+	color: white;
+	font-family: Arial, Helvetica, sans-serif;
+font-size: 11px;
+letter-spacing: 1px;
+font-weight: normal;
+font-style: normal;
+font-variant: normal;
+text-transform: lowercase;
+right: 15px;
+bottom: 0px;
+
+}
+.game-score1 .dead-inf{
+	color:#c81450;
+}
+.game-score2 .dead-inf{
+	color:#1464c5;
 }
 
 .canvas-wrapper {
