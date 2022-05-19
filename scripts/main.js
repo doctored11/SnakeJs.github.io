@@ -554,11 +554,11 @@ function incScore( playerProperty) {
 	playerProperty.score++;
 	
 	if (blue == 1) {
-		playerPropety.score += 10;
+		playerProperty.score += 10;
 		blue = 0;
 	}
 	if (yellow == 1) {
-		playerPropety.score += 50;
+		playerProperty.score += 50;
 		yellow = 0;
 	}
 	drawScore();
