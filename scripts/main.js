@@ -156,17 +156,11 @@ requestAnimationFrame(gameLoop);
 function Speed(playerProperty) {
 	switch (playerProperty.score) {
 		case 1:
-
-
-
 			playerProperty.snakeCell = 2 * speedStep;
-
 			break;
 		case 2:
 			addCobble();
 			playerProperty.snakeCell = 3 * speedStep;
-
-
 			break;
 		case 5:
 			addCobble();
@@ -193,7 +187,6 @@ function Speed(playerProperty) {
 			break;
 		case 50:
 			destroy();
-
 			break;
 		case 70:
 			destroy();
@@ -204,7 +197,6 @@ function Speed(playerProperty) {
 			playerProperty.snakeCell = 8 * speedStep;
 			break;
 		case 150:
-
 			destroy();
 			playerProperty.snakeCell = 9 * speedStep;
 			break;
@@ -662,8 +654,8 @@ document.addEventListener("keydown", function(e) {
 		if (snakeProperty2.dy !== 0 && snakeProperty2.dy > 0) {
 
 
-			snakeProperty2.dx = -snakeProperty.snakeCell;
-			snakeProperty2.dy = -snakeProperty.snakeCell;
+			snakeProperty2.dx = -snakeProperty2.snakeCell;
+			snakeProperty2.dy = -snakeProperty2.snakeCell;
 			setTimeout(() => {
 				invulnerability = true;
 				snakeProperty2.dx = 0;
@@ -672,8 +664,7 @@ document.addEventListener("keydown", function(e) {
 
 		} else {
 			invulnerability = false;
-
-			snakeProperty2.dy = -snakeProperty.snakeCell;
+			snakeProperty2.dy = -snakeProperty2.snakeCell;
 			snakeProperty2.dx = 0;
 		}
 
@@ -683,8 +674,8 @@ document.addEventListener("keydown", function(e) {
 	} else if (e.code == "ArrowLeft" || e.code == "37" ) {
 		if (snakeProperty2.dx !== 0 && snakeProperty2.dx > 0) {
 
-			snakeProperty2.dy = snakeProperty.snakeCell;
-			snakeProperty2.dx = -snakeProperty.snakeCell;
+			snakeProperty2.dy = snakeProperty2.snakeCell;
+			snakeProperty2.dx = -snakeProperty2.snakeCell;
 			setTimeout(() => {
 				invulnerability = true;
 				snakeProperty2.dy = 0;
@@ -692,14 +683,14 @@ document.addEventListener("keydown", function(e) {
 			invulnerability = false;
 		} else {
 			invulnerability = false;
-			snakeProperty2.dx = -snakeProperty.snakeCell;
+			snakeProperty2.dx = -snakeProperty2.snakeCell;
 			snakeProperty2.dy = 0;
 		}
 	} else if (e.code == "ArrowDown" || e.code == "40") {
 		if (snakeProperty2.dy !== 0 && snakeProperty2.dy < 0) {
 
-			snakeProperty2.dx = snakeProperty.snakeCell;
-			snakeProperty2.dy = snakeProperty.snakeCell;
+			snakeProperty2.dx = snakeProperty2.snakeCell;
+			snakeProperty2.dy = snakeProperty2.snakeCell;
 			setTimeout(() => {
 				invulnerability = true;
 				snakeProperty2.dx = 0;
@@ -707,14 +698,14 @@ document.addEventListener("keydown", function(e) {
 			invulnerability = false;
 		} else {
 			invulnerability = false;
-			snakeProperty2.dy = snakeProperty.snakeCell;
+			snakeProperty2.dy = snakeProperty2.snakeCell;
 			snakeProperty2.dx = 0;
 		}
 	} else if (e.code == "ArrowRight" || e.code == "39") {
 		if (snakeProperty2.dx !== 0 && snakeProperty2.dx < 0) {
 
-			snakeProperty2.dy = -snakeProperty.snakeCell;
-			snakeProperty2.dx = snakeProperty.snakeCell;
+			snakeProperty2.dy = -snakeProperty2.snakeCell;
+			snakeProperty2.dx = snakeProperty2.snakeCell;
 			setTimeout(() => {
 				invulnerability = true;
 				snakeProperty2.dy = 0;
@@ -722,7 +713,7 @@ document.addEventListener("keydown", function(e) {
 			invulnerability = false;
 		} else {
 			invulnerability = false;
-			snakeProperty2.dx = snakeProperty.snakeCell;
+			snakeProperty2.dx = snakeProperty2.snakeCell;
 			snakeProperty2.dy = 0;
 		}
 		
