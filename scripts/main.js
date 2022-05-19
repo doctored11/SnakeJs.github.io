@@ -5,6 +5,9 @@ let scoreBlock2;
 let ear = 5;
 let baseCobbleX = [];
 let baseCobbleY = [];
+let baseSpitX = [];
+let baseSpitY = [];
+
 let random;
 let secondPlayer = false;
 const screenWidth = window.screen.width;
@@ -21,8 +24,8 @@ menu.classList.remove("hide");
 btn.addEventListener("click", function() {
 	startGame();
 })
-Player2.classList.remove("live") ;
-Player2.classList.remove("live") ;
+Player1.classList.add("live") ;
+Player2.classList.add("live") ;
 
 function startGame() {
 	menu.classList.add("hide");
@@ -84,6 +87,7 @@ const snakeProperty = {
 	snakeCell: 2 * speedStep,
 
 }
+
 const snakeProperty2 = {
 	x: 50,
 	y: 50,
@@ -117,16 +121,23 @@ scoreBlock2 = document.querySelector(".game-score .count2");
 drawScore();
 
 function gameLoop() {
+	
 
 	requestAnimationFrame(gameLoop);
+	spitMath();
 	if (++gameConfig.step < gameConfig.maxStep) {
 		return;
 	}
 	gameConfig.step = 0;
 
 	context.clearRect(0, 0, canvas.width, canvas.height);
-
+	
 	drawBerry();
+	
+	
+	
+
+	
 	if (random == false) {
 		drawCobble();
 	} else {
@@ -138,13 +149,17 @@ function gameLoop() {
 		document.addEventListener("keydown", function(e) {
 			if ( snakeProperty.score < 1 && (e.code == "KeyO" ||  e.code == "ArrowLeft" || e.code == "ArrowRight" || e.code == "ArrowDown" || e.code == "ArrowUp" )){
 				secondPlayer = true;
-				  counters.classList.add("active-second-player");
+				Player2.classList.add("live");
+				counters.classList.add("active-second-player");
 			}
 		})
 	}
 if (secondPlayer == true ){
 	drawsnakeProperty( snakeProperty2);}
 	drawsnakeProperty( snakeProperty);
+	
+	
+	
 	
 
 	// botDinner();
@@ -293,7 +308,7 @@ function drawsnakeProperty(playerProperty) {
 		}
 	} else if  ( playerProperty.id == "secondPlayer") 
 	{ 
-		let line = index%2 == 0;
+		
 		// console.log( roundTo10(index * ( snakeProperty2.snakeLength.length) / (ear* sizeStep)), snakeProperty2.snakeLength.length, index, ear* sizeStep);
 		
 		// 
@@ -311,11 +326,6 @@ function drawsnakeProperty(playerProperty) {
 		{
 			context.fillStyle = "#008891";
 			
-			
-			
-			
-			
-
 		}
 
 
@@ -437,13 +447,16 @@ function collisionBorder(  playerProperty ) {
 }
 
 function refreshGame( playerProperty ) {
+	
+	Player2.classList.add("live") ;
 	secondPlayer  = false;
 	Player1.classList.add("live") ;
-	Player2.classList.add("live") ;
+	
 	counters.classList.remove("active-second-player");
 
 	baseCobbleX = [];
 	baseCobbleY = [];
+	
 	if (Math.random() > 0.97) {
 		random = true;
 
@@ -521,11 +534,16 @@ function randomPositionBerry() {
 }
 
 function drawCobble() {
+
+
+	
 	context.beginPath();
 
 	context.fillStyle = "#222523f6";
 	for (let i = 0; i < baseCobbleX.length; i++) {
 		context.fillRect(baseCobbleX[i], baseCobbleY[i], gameConfig.sizeCell * 2, gameConfig.sizeCell * 2);
+		
+
 		context.fill();
 	}
 }
@@ -572,10 +590,11 @@ function getRandomInt(min, max) {
 }
 
 document.addEventListener("keydown", function(e) {
-	// console.log(e.code);
+	
 	
 	// console.log(snakeProperty.dy,snakeProperty.dx, gameConfig.snakeCell,gameConfig.sizeCell, gameConfig.maxStep,gameConfig.step, gameConfig.snakeCell,speedStep );
 	if (e.code == "KeyW") {
+		
 		// console.log (  el.x , elb.x, el.y , elb.y + "!" );
 		if (snakeProperty.dy !== 0 && snakeProperty.dy > 0) {
 
@@ -629,6 +648,8 @@ document.addEventListener("keydown", function(e) {
 			snakeProperty.dx = 0;
 		}
 	} else if (e.code == "KeyD") {
+		
+		
 		if (snakeProperty.dx !== 0 && snakeProperty.dx < 0) {
 
 			snakeProperty.dy = -snakeProperty.snakeCell;
@@ -904,9 +925,24 @@ function berryBotSearch() {
 
 }
 
-1
-2
-3
 function roundTo5(num) {
     return Math.round(num/5)*5;
+}
+
+
+
+function spitMath(){
+// baseSpitX.push(snakeProperty.x );
+// baseSpitY.push(snakeProperty.y);
+
+// for(let i =0; i <= baseSpitX; i++){
+// baseSpitX[0] += gameConfig.sizeCell;
+// baseSpitY[0] += gameConfig.sizeCell;
+context.beginPath();
+context.fillStyle = "#fff";
+context.fillRect(50, 50, 50, 50);
+context.fill();
+
+
+// }
 }
