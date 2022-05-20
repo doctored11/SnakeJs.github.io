@@ -80,7 +80,7 @@ function dead(playerProperty) {
 }
 
 
-let speedStep = 1;
+let speedStep = 2;
 let sizeStep = 1;
 let invulnerability = false;
 
@@ -570,10 +570,10 @@ function refreshGame(playerProperty) {
 	playerProperty.maxLength = 3 * ear * sizeStep;
 	playerProperty.life = true;
 
-	snakeProperty.dx = 0.1  * speedStep;
+	snakeProperty.dx = 1  * speedStep;
 	snakeProperty.dy = 0;
 	snakeProperty2.dy = 0;
-	snakeProperty2.dx = 0.8  * speedStep;
+	snakeProperty2.dx = 1  * speedStep;
 	botProperty.dx = 1;
 	botProperty.x = 360;
 	botProperty.y = 360;
@@ -585,6 +585,8 @@ function refreshGame(playerProperty) {
 	poop.y = -50;
 
 	botProperty.dy = 0;
+	Speed(snakeProperty);
+	Speed(snakeProperty2);
 
 
 	randomPositionBerry();
