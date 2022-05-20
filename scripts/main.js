@@ -1,5 +1,9 @@
 let scoreBlock;
 let scoreBlock2;
+let blue = 0;
+let yellow = 0;
+let none = "";
+let color = none;
 
 let ear = 5;
 let baseCobbleX = [];
@@ -586,29 +590,50 @@ function refreshGame(playerProperty) {
 
 
 }
-let blue = 0;
-let yellow = 0;
+
 
 function drawBerry() {
+	if ( color != "yellow" && color != "blue"){
+	context.beginPath();
 	if ((snakeProperty.score + snakeProperty2.score) / 15 == 1 && Math.random() > 0.9) {
 		context.fillStyle = "#adb60e";
-		context.arc(berry.x + (gameConfig.sizeCell / 2), berry.y + (gameConfig.sizeCell / 2), gameConfig.sizeBerry, 0, 2 * Math.PI);
-		context.fill();
-		yellow = 1;
+		
+		color = "yellow"
 	} else
 	if ((snakeProperty.score + snakeProperty2.score) / 10 == 1 && Math.random() > 0.75) {
 		context.fillStyle = "#010c71";
-		context.arc(berry.x + (gameConfig.sizeCell / 2), berry.y + (gameConfig.sizeCell / 2), gameConfig.sizeBerry, 0, 2 * Math.PI);
-		context.fill();
-		blue = 1;
+		
+		color = "blue"
 	} else
 	if (blue !== 1 && yellow !== 1) {
-		context.beginPath();
-		context.fillStyle = "#A00034";
-		context.arc(berry.x + (gameConfig.sizeCell / 2), berry.y + (gameConfig.sizeCell / 2), gameConfig.sizeBerry, 0, 2 * Math.PI);
-		context.fill();
+		
+		color = none;
+		
+	}
+}
+switch(color){
+	case "yellow":
+		context.fillStyle = "#adb60e";
+		break;
+		case "blue":
+			context.fillStyle = "#010c71";
+		break;
+		default:
+			context.fillStyle = "#A00034";
+			break;
+
+
+		
+
 	}
 
+	
+
+
+
+	context.arc(berry.x + (gameConfig.sizeCell / 2), berry.y + (gameConfig.sizeCell / 2), gameConfig.sizeBerry, 0, 2 * Math.PI);
+
+	context.fill();
 
 
 }
@@ -647,13 +672,13 @@ function randomPositionCobble() {
 function incScore(playerProperty) {
 	playerProperty.score++;
 
-	if (blue == 1) {
+	if (color == "blue") {
 		playerProperty.score += 10;
-		blue = 0;
+		color = none;
 	}
-	if (yellow == 1) {
+	if (yellow == "yellow") {
 		playerProperty.score += 50;
-		yellow = 0;
+		color = none;
 	}
 	drawScore();
 }
