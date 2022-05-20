@@ -549,8 +549,9 @@ function refreshGame(playerProperty) {
 
 
 	playerProperty.score = 0;
+	console.log("параметры" + screenHeight, screenWidth, pixels) 
 
-	if (pixels < 1.1 || (screenWidth > 1800 && screenHeight > 1000)) {
+	if (pixels < 1.8 || (screenWidth > 1800 && screenHeight > 1000)) {
 		speedStep = 0.42;
 		sizeStep = 2;
 		console.log(screenHeight, screenWidth, pixels)
