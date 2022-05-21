@@ -2,7 +2,9 @@
 ____
 #Snake.
 ##  Установка
-Для предосмотра работы "сайта" перейдите на [github pages](doctored11.github.io/snakejs.github.io) . 
+Для предосмотра работы "сайта" перейдите на [github pages](doctored11.github.io/snakejs.github.io/) . 
+Клик--> doctored11.github.io/snakejs.github.io/
+
 >⚠️ Рекомендуется установить игру локально (или на сервер), для корректной работы и устранения некоторых задержек.
 
 Для локальной установки 
